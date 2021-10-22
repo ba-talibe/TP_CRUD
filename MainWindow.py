@@ -28,8 +28,8 @@ class MainWindow(Tk):
     
     def remplirAfficher(self):
         result = lecture()
-        ttk.Label()
-        for line, i in zip(result, range(len(result)):
+        ttk.Label(self.onglet_afficher, text=head).grid(column=0, row=0, padx=10, pady=10)
+        for line, i in zip(result, range(len(result))):
             text = line
             ttk.Label(self.onglet_afficher,text=)
 
