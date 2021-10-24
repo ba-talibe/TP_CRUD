@@ -14,21 +14,18 @@ class MainWindow(Tk):
 
 
         self.onglet_afficher = ttk.Frame(self.onglet_control)
-        masteur = ttk.Frame(self.onglet_control)
+        self.onglet_ajouter = ttk.Frame(self.onglet_control)
         self.onglet_suppimer = ttk.Frame(self.onglet_control)
         self.onglet_modifier = ttk.Frame(self.onglet_control)
 
         self.onglet_control.add(self.onglet_afficher, text='Afficher')
-        self.onglet_control.add(masteur, text='Ajouter')
+        self.onglet_control.add(self.onglet_ajouter, text='Ajouter')
 
         self.onglet_control.pack(expand=1, fill="both")
         
         self.remplirAfficher()
         self.remplirAjouter()
-        self.remplirsupprimer()
-        self.remplirModifier()
-        print (self.winfo_width())
-        print (self.winfo_height())
+
     
     def remplirAfficher(self) -> None:
         results = lecture()
@@ -58,43 +55,36 @@ class MainWindow(Tk):
                          ).grid(row=1, column=2, sticky=E)
         
 
-    def remplirAjouter(self, masteur):
+    def remplirAjouter(self):
         self.num = IntVar()
         self.prenom = StringVar()
         self.nom = StringVar()
         self.note = StringVar()
 
-        Label(masteur, text="Numero Etudiant : ").grid(column=0, row=0, padx=10, pady=10, sticky=W)
-        champNum = Entry(masteur,
+        Label(self.onglet_ajouter, text="Numero Etudiant : ").grid(column=0, row=0, padx=10, pady=10, sticky=W)
+        champNum = Entry(self.onglet_ajouter,
                                 textvariable=self.num,
                                 width=70).grid(column=1, row=0)
 
-        Label(masteur, text="Prenom : ").grid(column=0, row=1, padx=10, pady=10, sticky=W)
-        champPrenom = Entry(masteur,
+        Label(self.onglet_ajouter, text="Prenom : ").grid(column=0, row=1, padx=10, pady=10, sticky=W)
+        champPrenom = Entry(self.onglet_ajouter,
                                 textvariable=self.prenom,
                                 width=70).grid(column=1, row=1, padx=10, pady=10,)
 
-        Label(masteur, text="Nom : ").grid(column=0, row=2, padx=10, pady=10, sticky=W)
-        champNom = Entry(masteur, 
+        Label(self.onglet_ajouter, text="Nom : ").grid(column=0, row=2, padx=10, pady=10, sticky=W)
+        champNom = Entry(self.onglet_ajouter, 
                                 textvariable=self.nom,
                                 width=70)
 
         champNom.grid(column=1, row=2, padx=10, pady=10)
 
-        Label(masteur, text="Note : ").grid(column=0, row=3, padx=10, pady=10, sticky=W)
-        champNote = Entry(masteur, 
+        Label(self.onglet_ajouter, text="Note : ").grid(column=0, row=3, padx=10, pady=10, sticky=W)
+        champNote = Entry(self.onglet_ajouter, 
                                 textvariable=self.note,
                                 width=70).grid(column=1, row=3, padx=10, pady=10)
 
-        AjoutButton = Button(masteur, text='Ajouter', command=self.verifierAjout)
+        AjoutButton = Button(self.onglet_ajouter, text='Ajouter', command=self.verifierAjout)
         AjoutButton.grid(row= 4, column=1)
-
-
-    def remplirsupprimer(self):
-        pass
-
-    def remplirModifier(self):
-        pass
 
     def verifierAjout(self):
         result = getNum()
@@ -130,8 +120,72 @@ class MainWindow(Tk):
 
     def modifierLigne(self):
         ligne = self.tableau.selection()
-        [num, prenom, nom, note] = list(self.tableau.item(ligne)['values'])
+        valeurs = list(self.tableau.item(ligne)['values'])
+        print(valeurs)
         fenModif = Tk()
         fenModif.title("Modifier Note")
+
+        num = IntVar()
+        prenom = StringVar()
+        nom = StringVar()
+        note = StringVar()
+
+
+
+        Label(fenModif, text="Numero Etudiant : ").grid(column=0, row=0, padx=10, pady=10, sticky=W)
+        champNum = Entry(fenModif,
+                                textvariable=num,
+                                width=70)
+        champNum.grid(column=1, row=0)
+        champNum.insert(0, valeurs[0])
+
+        Label(fenModif, text="Prenom : ").grid(column=0, row=1, padx=10, pady=10, sticky=W)
+        champPrenom = Entry(fenModif, textvariable=prenom,
+                        width=70)
+        champPrenom.grid(column=1, row=1, padx=10, pady=10)
+        champPrenom.insert(0, valeurs[1])
+
+        Label(fenModif, text="Nom : ").grid(column=0, row=2, padx=10, pady=10, sticky=W)
+        champNom = Entry(fenModif, 
+                                textvariable=nom,
+                                width=70)
+
+        champNom.grid(column=1, row=2, padx=10, pady=10)
+        champNom.insert(0, valeurs[2])
+
+        Label(fenModif, text="Note : ").grid(column=0, row=3, padx=10, pady=10, sticky=W)
+        champNote = Entry(fenModif, 
+                        textvariable=note,
+                        width=70)
+        champNote.grid(column=1, row=3, padx=10, pady=10)
+        champNote.insert(0, valeurs[3])
+
+        Button(fenModif, text='Modifier',
+                                command=lambda: self.verifierModif(fenModif, champNum.get(), champPrenom.get(), champNom.get(), champNote.get())
+                                ).grid(row= 4, column=1)
+     
+
+    def verifierModif(self, master : Tk,  num, prenom, nom, note):
+        print(nom, prenom, nom, note)
+        if len(note) ==0 or not (0 <= int(note) <= 20):
+             showwarning("Erreur de Saisie", "La Note Saisie est Incorrcte")
+             return
+
+        if len(prenom) == 0 or len(nom) == 0:
+            showwarning("Erreur de Saisie", "Les champs prenom et nom ne peuveut etre vide")
+            return
+
+        if askyesno('Confirmation de Modification', "Etes vous sûr de vouloir modifier cette note ?"):
+            print("askyesno")
+            update(num, prenom, nom, note)
+            line = self.tableau.selection()
+            for x in line:
+                self.tableau.item(x, values=(num, prenom, nom, note))
+            master.destroy()
+            showinfo("Reussi", "Transaction Effectué")
+
+        else:
+            return
+
 
         
