@@ -108,7 +108,7 @@ class MainWindow(Tk):
                               nom,
                               note))
 
-        showinfo("Reussi", "Transaction Effectué")
+        showinfo("Reussi", "Ajout Effectué")
         
     def supprimerLigne(self):
         if askyesno('Confirmation de Suppression', "Etes vous sûr de vouloir surpprimmer cette note ?"):
@@ -121,42 +121,28 @@ class MainWindow(Tk):
     def modifierLigne(self):
         ligne = self.tableau.selection()
         valeurs = list(self.tableau.item(ligne)['values'])
-        print(valeurs)
         fenModif = Tk()
         fenModif.title("Modifier Note")
 
-        num = IntVar()
-        prenom = StringVar()
-        nom = StringVar()
-        note = StringVar()
-
-
-
         Label(fenModif, text="Numero Etudiant : ").grid(column=0, row=0, padx=10, pady=10, sticky=W)
         champNum = Entry(fenModif,
-                                textvariable=num,
                                 width=70)
         champNum.grid(column=1, row=0)
         champNum.insert(0, valeurs[0])
 
         Label(fenModif, text="Prenom : ").grid(column=0, row=1, padx=10, pady=10, sticky=W)
-        champPrenom = Entry(fenModif, textvariable=prenom,
-                        width=70)
+        champPrenom = Entry(fenModif, width=70)
         champPrenom.grid(column=1, row=1, padx=10, pady=10)
         champPrenom.insert(0, valeurs[1])
 
         Label(fenModif, text="Nom : ").grid(column=0, row=2, padx=10, pady=10, sticky=W)
-        champNom = Entry(fenModif, 
-                                textvariable=nom,
-                                width=70)
+        champNom = Entry(fenModif, width=70)
 
         champNom.grid(column=1, row=2, padx=10, pady=10)
         champNom.insert(0, valeurs[2])
 
         Label(fenModif, text="Note : ").grid(column=0, row=3, padx=10, pady=10, sticky=W)
-        champNote = Entry(fenModif, 
-                        textvariable=note,
-                        width=70)
+        champNote = Entry(fenModif,width=70)
         champNote.grid(column=1, row=3, padx=10, pady=10)
         champNote.insert(0, valeurs[3])
 
@@ -166,7 +152,6 @@ class MainWindow(Tk):
      
 
     def verifierModif(self, master : Tk,  num, prenom, nom, note):
-        print(nom, prenom, nom, note)
         if len(note) ==0 or not (0 <= int(note) <= 20):
              showwarning("Erreur de Saisie", "La Note Saisie est Incorrcte")
              return
@@ -176,13 +161,12 @@ class MainWindow(Tk):
             return
 
         if askyesno('Confirmation de Modification', "Etes vous sûr de vouloir modifier cette note ?"):
-            print("askyesno")
             update(num, prenom, nom, note)
             line = self.tableau.selection()
             for x in line:
                 self.tableau.item(x, values=(num, prenom, nom, note))
             master.destroy()
-            showinfo("Reussi", "Transaction Effectué")
+            showinfo("Reussi", "Modification Effectué")
 
         else:
             return
